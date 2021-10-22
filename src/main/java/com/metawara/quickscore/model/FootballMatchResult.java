@@ -1,30 +1,19 @@
 package com.metawara.quickscore.model;
 
 public class FootballMatchResult {
-    private FootballClub winner;
-    private FootballClub loser;
+    private MatchStatistics homeSideMatchStatistics;
+    private MatchStatistics awaySideMatchStatistics;
 
-    public FootballMatchResult() {
+    public FootballMatchResult(MatchStatistics homeSideMatchStatistics, MatchStatistics awaySideMatchStatistics) {
+        this.homeSideMatchStatistics = homeSideMatchStatistics;
+        this.awaySideMatchStatistics = awaySideMatchStatistics;
     }
 
-    public FootballMatchResult(FootballClub winner, FootballClub loser) {
-        this.winner = winner;
-        this.loser = loser;
+    public MatchStatistics getHomeSideMatchStatistics() {
+        return homeSideMatchStatistics;
     }
 
-    public FootballClub getWinner() {
-        return winner;
-    }
-
-    public void setWinner(FootballClub winner) {
-        this.winner = winner;
-    }
-
-    public FootballClub getLoser() {
-        return loser;
-    }
-
-    public void setLoser(FootballClub loser) {
-        this.loser = loser;
+    public MatchStatistics getAwaySideMatchStatistics() {
+        return awaySideMatchStatistics;
     }
 }

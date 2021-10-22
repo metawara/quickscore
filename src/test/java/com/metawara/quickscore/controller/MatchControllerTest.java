@@ -2,8 +2,11 @@ package com.metawara.quickscore.controller;
 
 import com.metawara.quickscore.model.FootballClub;
 import com.metawara.quickscore.model.FootballMatchResult;
+import com.metawara.quickscore.model.MatchStatistics;
+import com.metawara.quickscore.results.ResultsDisplay;
+import com.metawara.quickscore.results.SimpleResultsDisplay;
 import com.metawara.quickscore.service.MatchLogic;
-import com.metawara.quickscore.service.MatchLogicService;
+import com.metawara.quickscore.service.SimpleMatchLogicService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class MatchControllerTest {
 
     private static final String CLUB_1_NAME = "Club Name 1";
+    private static final String CLUB_2_NAME = "Club Name 2";
 
     private FootballClub footballClub1;
     private FootballClub footballClub2;
@@ -23,6 +27,7 @@ public class MatchControllerTest {
     private FootballMatchResult footballMatchResult;
 
     private MatchLogic matchLogic;
+    private ResultsDisplay resultsDisplay;
 
     @Before
     public void mockBehavior() {
@@ -33,11 +38,11 @@ public class MatchControllerTest {
 
     @Test
     public void simulateMatch_shouldPass() {
-        MatchController mc = new MatchController(matchLogic);
+        MatchController mc = new MatchController(matchLogic, new SimpleResultsDisplay());
         FootballMatchResult matchResult = mc.simulateMatch(footballClub1, footballClub2);
 
-        assertEquals(matchResult.getWinner(), footballClub1);
-        assertEquals(matchResult.getLoser(), footballClub2);
+        assertEquals(matchResult.getHomeSideMatchStatistics().getFootballClub(), footballClub1);
+        assertEquals(matchResult.getAwaySideMatchStatistics().getFootballClub(), footballClub2);
     }
 
     private void mockFootballClubs() {
@@ -45,16 +50,24 @@ public class MatchControllerTest {
         footballClub2 = Mockito.mock(FootballClub.class);
 
         Mockito.when(footballClub1.getName()).thenReturn(CLUB_1_NAME);
+        Mockito.when(footballClub2.getName()).thenReturn(CLUB_2_NAME);
     }
 
     private void mockFootballMatchResults() {
         footballMatchResult = Mockito.mock(FootballMatchResult.class);
-        Mockito.when(footballMatchResult.getWinner()).thenReturn(footballClub1);
-        Mockito.when(footballMatchResult.getLoser()).thenReturn(footballClub2);
+
+        MatchStatistics matchStatistics1 = Mockito.mock(MatchStatistics.class);
+        MatchStatistics matchStatistics2 = Mockito.mock(MatchStatistics.class);
+
+        Mockito.when(footballMatchResult.getHomeSideMatchStatistics()).thenReturn(matchStatistics1);
+        Mockito.when(footballMatchResult.getAwaySideMatchStatistics()).thenReturn(matchStatistics2);
+        Mockito.when(footballMatchResult.getHomeSideMatchStatistics().getFootballClub()).thenReturn(footballClub1);
+        Mockito.when(footballMatchResult.getAwaySideMatchStatistics().getFootballClub()).thenReturn(footballClub2);
     }
 
+
     private void mockMatchLogic() {
-        matchLogic = Mockito.mock(MatchLogicService.class);
+        matchLogic = Mockito.mock(SimpleMatchLogicService.class);
         Mockito.when(matchLogic.simulateMatch(footballClub1, footballClub2)).thenReturn(footballMatchResult);
     }
 
