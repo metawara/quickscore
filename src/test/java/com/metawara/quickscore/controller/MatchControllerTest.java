@@ -27,7 +27,6 @@ public class MatchControllerTest {
     private FootballMatchResult footballMatchResult;
 
     private MatchLogic matchLogic;
-    private ResultsDisplay resultsDisplay;
 
     @Before
     public void mockBehavior() {
@@ -64,7 +63,6 @@ public class MatchControllerTest {
         Mockito.when(footballMatchResult.getHomeSideMatchStatistics().getFootballClub()).thenReturn(footballClub1);
         Mockito.when(footballMatchResult.getAwaySideMatchStatistics().getFootballClub()).thenReturn(footballClub2);
     }
-
 
     private void mockMatchLogic() {
         matchLogic = Mockito.mock(SimpleMatchLogicService.class);
