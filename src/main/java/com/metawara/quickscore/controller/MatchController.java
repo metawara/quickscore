@@ -9,9 +9,7 @@ public class MatchController {
 
     private final MatchLogic matchLogic;
     private final ResultsDisplay resultsDisplay;
-
-
-
+    
     public MatchController(MatchLogic matchLogic, ResultsDisplay resultsDisplay) {
         this.matchLogic = matchLogic;
         this.resultsDisplay = resultsDisplay;

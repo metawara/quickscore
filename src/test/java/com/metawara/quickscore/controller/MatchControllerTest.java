@@ -30,7 +30,6 @@ public class MatchControllerTest {
 
     @Before
     public void mockBehavior() {
-        mockFootballClubs();
         mockFootballMatchResults();
         mockMatchLogic();
     }
@@ -44,14 +43,6 @@ public class MatchControllerTest {
         assertEquals(matchResult.getAwaySideMatchStatistics().getFootballClub(), footballClub2);
     }
 
-    private void mockFootballClubs() {
-        footballClub1 = Mockito.mock(FootballClub.class);
-        footballClub2 = Mockito.mock(FootballClub.class);
-
-        Mockito.when(footballClub1.getName()).thenReturn(CLUB_1_NAME);
-        Mockito.when(footballClub2.getName()).thenReturn(CLUB_2_NAME);
-    }
-
     private void mockFootballMatchResults() {
         footballMatchResult = Mockito.mock(FootballMatchResult.class);
 
@@ -62,6 +53,8 @@ public class MatchControllerTest {
         Mockito.when(footballMatchResult.getAwaySideMatchStatistics()).thenReturn(matchStatistics2);
         Mockito.when(footballMatchResult.getHomeSideMatchStatistics().getFootballClub()).thenReturn(footballClub1);
         Mockito.when(footballMatchResult.getAwaySideMatchStatistics().getFootballClub()).thenReturn(footballClub2);
+        Mockito.when(footballMatchResult.getHomeSideResult()).thenReturn(CLUB_1_NAME + " - 1");
+        Mockito.when(footballMatchResult.getAwaySideResult()).thenReturn(CLUB_2_NAME + " - 2");
     }
 
     private void mockMatchLogic() {

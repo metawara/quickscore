@@ -3,7 +3,7 @@ package com.metawara.quickscore.model;
 public class FootballClub {
     private int id;
     private String name;
-    private double chanceOfWinnning;
+    private double chanceOfWinning;
 
     public int getId() {
         return id;
@@ -21,11 +21,11 @@ public class FootballClub {
         this.name = name;
     }
 
-    public double getChanceOfWinnning() {
-        return chanceOfWinnning;
+    public double getChanceOfWinning() {
+        return chanceOfWinning;
     }
 
-    public void setChanceOfWinnning(double chanceOfWinnning) {
-        this.chanceOfWinnning = chanceOfWinnning;
+    public void setChanceOfWinning(double chanceOfWinning) {
+        this.chanceOfWinning = chanceOfWinning;
     }
 }

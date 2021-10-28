@@ -1,22 +1,15 @@
 package com.metawara.quickscore.results;
 
 import com.metawara.quickscore.model.FootballMatchResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.logging.Logger;
-
-/**
- * A simple results display utilizing the standard sout printing methods.
- */
 public class SimpleResultsDisplay implements ResultsDisplay {
 
-    private final Logger logger = Logger.getLogger(SimpleResultsDisplay.class.toString());
+    private static final Logger logger = LoggerFactory.getLogger(SimpleResultsDisplay.class);
 
     @Override
     public void display(FootballMatchResult footballMatchResult) {
-        logger.info(footballMatchResult.getHomeSideMatchStatistics().getFootballClub().getName() + ": "
-                + footballMatchResult.getHomeSideMatchStatistics().getGoalsScored());
-
-        logger.info(footballMatchResult.getAwaySideMatchStatistics().getFootballClub().getName() + ": "
-                + footballMatchResult.getAwaySideMatchStatistics().getGoalsScored());
+        logger.info("{} - {}", footballMatchResult.getHomeSideResult(), footballMatchResult.getAwaySideResult());
     }
 }

@@ -14,11 +14,11 @@ public class SimpleMatchLogicService implements MatchLogic {
     public FootballMatchResult simulateMatch(FootballClub homeSide, FootballClub awaySide) {
         int homeSideGoalsScored;
         int awaySideGoalsSCored;
-        if (homeSide.getChanceOfWinnning() > awaySide.getChanceOfWinnning()) {
+        if (homeSide.getChanceOfWinning() > awaySide.getChanceOfWinning()) {
             homeSideGoalsScored = new Random().nextInt(5);
             awaySideGoalsSCored = homeSideGoalsScored - new Random().nextInt(5 - homeSideGoalsScored);
         }
-        else if (homeSide.getChanceOfWinnning() < awaySide.getChanceOfWinnning()) {
+        else if (homeSide.getChanceOfWinning() < awaySide.getChanceOfWinning()) {
             awaySideGoalsSCored = new Random().nextInt(5);
             homeSideGoalsScored = awaySideGoalsSCored - new Random().nextInt(5 - awaySideGoalsSCored);
         }

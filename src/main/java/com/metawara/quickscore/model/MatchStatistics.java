@@ -1,8 +1,8 @@
 package com.metawara.quickscore.model;
 
 public class MatchStatistics {
-    private FootballClub footballClub;
-    private int goalsScored;
+    private final FootballClub footballClub;
+    private final int goalsScored;
 
     public MatchStatistics(FootballClub footballClub, int goalsScored) {
         this.footballClub = footballClub;
