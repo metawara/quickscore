@@ -63,14 +63,8 @@ public class MatchResolverServiceTest {
         Mockito.when(match.getHomeSideMatchStatistics().getFootballClub()).thenReturn(footballClub1);
         Mockito.when(match.getAwaySideMatchStatistics().getFootballClub()).thenReturn(footballClub2);
         Mockito.when(match.getHomeSideMatchStatistics().getMatchRoster()).thenReturn(roster);
-        Mockito.when(match.getAwaySideMatchStatistics().getMatchRoster()).thenReturn(roster);
-        Mockito.when(roster.getFirstTeam()).thenReturn(null);
-        Mockito.when(roster.getBench()).thenReturn(null);
-        Mockito.when(match.getHomeSideResult()).thenReturn(CLUB_1_NAME + " - 1");
-        Mockito.when(match.getAwaySideResult()).thenReturn(CLUB_2_NAME + " - 2");
     }
 
     private void mockMatchLogic() {
-        Mockito.when(matchLogic.simulateMatch(match)).thenReturn(match);
     }
 }

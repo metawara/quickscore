@@ -53,16 +53,7 @@ public class RosterValidatorTest {
         assertFalse(RosterValidator.validate(roster));
 
         Mockito.when(startingEleven.size()).thenReturn(9);
-        Mockito.when(bench.size()).thenReturn(7);
 
         assertFalse(RosterValidator.validate(roster));
-    }
-
-    @Test
-    public void testValidation_bothListsareNull_shouldAccept() {
-        Mockito.when(roster.getFirstTeam()).thenReturn(null);
-        Mockito.when(roster.getBench()).thenReturn(null);
-
-        assertTrue(RosterValidator.validate(roster));
     }
 }
