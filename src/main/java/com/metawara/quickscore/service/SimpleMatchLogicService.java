@@ -1,8 +1,7 @@
 package com.metawara.quickscore.service;
 
-import com.metawara.quickscore.model.FootballClub;
-import com.metawara.quickscore.model.FootballClubMatchStatistics;
-import com.metawara.quickscore.model.FootballMatchResult;
+import com.metawara.quickscore.model.match.FCMatchStatistics;
+import com.metawara.quickscore.model.match.Match;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -15,21 +14,22 @@ public class SimpleMatchLogicService implements MatchLogic {
     private static final Logger logger = LoggerFactory.getLogger(SimpleMatchLogicService.class);
 
     @Override
-    public FootballMatchResult simulateMatch(FootballClub homeSide, FootballClub awaySide) {
-        FootballClubMatchStatistics homeSideStatistics = new FootballClubMatchStatistics(homeSide, 0);
-        FootballClubMatchStatistics awaySideStatistics = new FootballClubMatchStatistics(awaySide, 0);
+    public Match simulateMatch(Match match) {
 
         int homeSideGoalsScored;
         int awaySideGoalsScored;
 
-        logger.debug("{} // {}", homeSide.getChanceOfWinning(), awaySide.getChanceOfWinning());
+        double homeSideWinningChance = match.getHomeSideWinningChance();
+        double awaySideWinningChance = match.getAwaySideWinningChance();
 
-        if (homeSide.getChanceOfWinning() > awaySide.getChanceOfWinning()) {
-            homeSideGoalsScored = new Random().nextInt(5);
+        logger.debug("{} // {}", homeSideWinningChance, awaySideWinningChance);
+
+        if (homeSideWinningChance > awaySideWinningChance) {
+            homeSideGoalsScored = new Random().nextInt(4) + 1;
             awaySideGoalsScored = homeSideGoalsScored - new Random().nextInt(homeSideGoalsScored);
             homeSideGoalsScored++;
-        } else if (homeSide.getChanceOfWinning() < awaySide.getChanceOfWinning()) {
-            awaySideGoalsScored = new Random().nextInt(5);
+        } else if (homeSideWinningChance < awaySideWinningChance) {
+            awaySideGoalsScored = new Random().nextInt(4) + 1;
             homeSideGoalsScored = awaySideGoalsScored - new Random().nextInt(awaySideGoalsScored);
             awaySideGoalsScored++;
         } else {
@@ -37,22 +37,17 @@ public class SimpleMatchLogicService implements MatchLogic {
             awaySideGoalsScored = homeSideGoalsScored;
         }
 
-        increaseGoals(homeSideStatistics, awaySideStatistics, homeSideGoalsScored, awaySideGoalsScored);
+        increaseGoals(match.getHomeSideMatchStatistics(), homeSideGoalsScored);
+        increaseGoals(match.getAwaySideMatchStatistics(), homeSideGoalsScored);
 
         logger.debug("{} // {}", homeSideGoalsScored, awaySideGoalsScored);
 
-        return new FootballMatchResult(homeSideStatistics, awaySideStatistics);
+        return match;
     }
 
-
-
-    private void increaseGoals(FootballClubMatchStatistics homeSideStatistics, FootballClubMatchStatistics awaySideStatistics, int homeSideGoalsScored, int awaySideGoalsScored) {
-        for (int i = 0; i < homeSideGoalsScored; i++) {
-            homeSideStatistics.increaseGoalsScored();
-        }
-
-        for (int i = 0; i < awaySideGoalsScored; i++) {
-            awaySideStatistics.increaseGoalsScored();
+    private void increaseGoals(FCMatchStatistics matchStatistics, int goalsScored) {
+        for (int i = 0; i < goalsScored; i++) {
+            matchStatistics.increaseGoalsScored();
         }
     }
 }

@@ -1,9 +1,10 @@
 package com.metawara.quickscore.service;
 
 import com.metawara.quickscore.model.FootballClub;
-import com.metawara.quickscore.model.FootballMatchResult;
-import com.metawara.quickscore.model.FootballClubMatchStatistics;
-import com.metawara.quickscore.results.SimpleResultsDisplay;
+import com.metawara.quickscore.model.match.Match;
+import com.metawara.quickscore.model.match.FCMatchStatistics;
+import com.metawara.quickscore.display.SimpleResultsDisplay;
+import com.metawara.quickscore.model.roster.MatchRoster;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,19 +21,24 @@ public class MatchResolverServiceTest {
     private static final String CLUB_2_NAME = "Club Name 2";
 
     private FootballClub footballClub1;
+
+    @Mock
     private FootballClub footballClub2;
 
     @Mock
-    private FootballMatchResult footballMatchResult;
+    private Match match;
+
+    @Mock
+    private MatchRoster roster;
 
     @Mock
     private MatchLogic matchLogic;
 
     @Mock
-    FootballClubMatchStatistics matchStatistics1;
+    FCMatchStatistics FCMatchStatistics1;
 
     @Mock
-    FootballClubMatchStatistics matchStatistics2;
+    FCMatchStatistics FCMatchStatistics2;
 
     @Before
     public void mockBehavior() {
@@ -43,7 +49,7 @@ public class MatchResolverServiceTest {
     @Test
     public void verify_shouldFinishWithoutErrors() {
         MatchResolverService mc = new MatchResolverService(matchLogic, new SimpleResultsDisplay());
-        FootballMatchResult matchResult = mc.simulateMatch(footballClub1, footballClub2);
+        Match matchResult = mc.resolve(match);
 
         assertEquals(matchResult.getHomeSideMatchStatistics().getFootballClub(), footballClub1);
         assertEquals(matchResult.getAwaySideMatchStatistics().getFootballClub(), footballClub2);
@@ -52,16 +58,15 @@ public class MatchResolverServiceTest {
     /***** SETUP *****/
 
     private void mockFootballMatchResults() {
-        Mockito.when(footballMatchResult.getHomeSideMatchStatistics()).thenReturn(matchStatistics1);
-        Mockito.when(footballMatchResult.getAwaySideMatchStatistics()).thenReturn(matchStatistics2);
-        Mockito.when(footballMatchResult.getHomeSideMatchStatistics().getFootballClub()).thenReturn(footballClub1);
-        Mockito.when(footballMatchResult.getAwaySideMatchStatistics().getFootballClub()).thenReturn(footballClub2);
-        Mockito.when(footballMatchResult.getHomeSideResult()).thenReturn(CLUB_1_NAME + " - 1");
-        Mockito.when(footballMatchResult.getAwaySideResult()).thenReturn(CLUB_2_NAME + " - 2");
+        Mockito.when(match.getHomeSideMatchStatistics()).thenReturn(FCMatchStatistics1);
+        Mockito.when(match.getAwaySideMatchStatistics()).thenReturn(FCMatchStatistics2);
+        Mockito.when(match.getHomeSideMatchStatistics().getFootballClub()).thenReturn(footballClub1);
+        Mockito.when(match.getAwaySideMatchStatistics().getFootballClub()).thenReturn(footballClub2);
+        Mockito.when(match.getHomeSideResult()).thenReturn(CLUB_1_NAME + " - 1");
+        Mockito.when(match.getAwaySideResult()).thenReturn(CLUB_2_NAME + " - 2");
     }
 
     private void mockMatchLogic() {
-        Mockito.when(matchLogic.simulateMatch(footballClub1, footballClub2)).thenReturn(footballMatchResult);
+        Mockito.when(matchLogic.simulateMatch(match)).thenReturn(match);
     }
-
 }

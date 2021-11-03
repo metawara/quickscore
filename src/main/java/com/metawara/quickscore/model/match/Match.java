@@ -1,19 +1,19 @@
-package com.metawara.quickscore.model;
+package com.metawara.quickscore.model.match;
 
-public class FootballMatchResult {
-    private FootballClubMatchStatistics homeSideStatistics;
-    private FootballClubMatchStatistics awaySideStatistics;
+public class Match {
+    private FCMatchStatistics homeSideStatistics;
+    private FCMatchStatistics awaySideStatistics;
 
-    public FootballMatchResult(FootballClubMatchStatistics homeSideStatistics, FootballClubMatchStatistics awaySideStatistics) {
+    public Match(FCMatchStatistics homeSideStatistics, FCMatchStatistics awaySideStatistics) {
         this.homeSideStatistics = homeSideStatistics;
         this.awaySideStatistics = awaySideStatistics;
     }
 
-    public FootballClubMatchStatistics getHomeSideMatchStatistics() {
+    public FCMatchStatistics getHomeSideMatchStatistics() {
         return homeSideStatistics;
     }
 
-    public FootballClubMatchStatistics getAwaySideMatchStatistics() {
+    public FCMatchStatistics getAwaySideMatchStatistics() {
         return awaySideStatistics;
     }
 
@@ -32,4 +32,13 @@ public class FootballMatchResult {
     public String getAwaySideResult() {
         return awaySideStatistics.getFootballClub().getName() + " - " + awaySideStatistics.getGoalsScored();
     }
+
+    public double getHomeSideWinningChance() {
+        return homeSideStatistics.getFootballClub().getChanceOfWinning();
+    }
+
+    public double getAwaySideWinningChance() {
+        return awaySideStatistics.getFootballClub().getChanceOfWinning();
+    }
+
 }

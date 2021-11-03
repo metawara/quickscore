@@ -1,21 +1,20 @@
 package com.metawara.quickscore.service;
 
-import com.metawara.quickscore.model.FootballClub;
-import com.metawara.quickscore.model.FootballMatchResult;
-import com.metawara.quickscore.results.ResultsDisplay;
+import com.metawara.quickscore.display.SimpleResultsDisplay;
+import com.metawara.quickscore.model.match.Match;
 
 public class MatchResolverService {
 
     private final MatchLogic matchLogic;
-    private final ResultsDisplay resultsDisplay;
+    private final SimpleResultsDisplay resultsDisplay;
 
-    public MatchResolverService(MatchLogic matchLogic, ResultsDisplay resultsDisplay) {
+    public MatchResolverService(MatchLogic matchLogic, SimpleResultsDisplay resultsDisplay) {
         this.matchLogic = matchLogic;
         this.resultsDisplay = resultsDisplay;
     }
 
-    public FootballMatchResult simulateMatch(FootballClub footballClub1, FootballClub footballClub2) {
-        FootballMatchResult matchResult = matchLogic.simulateMatch(footballClub1, footballClub2);
+    public Match resolve(Match match) {
+        Match matchResult = matchLogic.simulateMatch(match);
         resultsDisplay.display(matchResult);
         return matchResult;
     }
