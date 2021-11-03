@@ -1,16 +1,15 @@
-package com.metawara.quickscore.controller;
+package com.metawara.quickscore.service;
 
 import com.metawara.quickscore.model.FootballClub;
 import com.metawara.quickscore.model.FootballMatchResult;
 import com.metawara.quickscore.results.ResultsDisplay;
-import com.metawara.quickscore.service.MatchLogic;
 
-public class MatchController {
+public class MatchResolverService {
 
     private final MatchLogic matchLogic;
     private final ResultsDisplay resultsDisplay;
-    
-    public MatchController(MatchLogic matchLogic, ResultsDisplay resultsDisplay) {
+
+    public MatchResolverService(MatchLogic matchLogic, ResultsDisplay resultsDisplay) {
         this.matchLogic = matchLogic;
         this.resultsDisplay = resultsDisplay;
     }

@@ -1,10 +1,10 @@
 package com.metawara.quickscore.model;
 
-public class MatchStatistics {
+public class FootballClubMatchStatistics {
     private final FootballClub footballClub;
-    private final int goalsScored;
+    private int goalsScored;
 
-    public MatchStatistics(FootballClub footballClub, int goalsScored) {
+    public FootballClubMatchStatistics(FootballClub footballClub, int goalsScored) {
         this.footballClub = footballClub;
         this.goalsScored = goalsScored;
     }
@@ -15,5 +15,9 @@ public class MatchStatistics {
 
     public int getGoalsScored() {
         return goalsScored;
+    }
+
+    public void increaseGoalsScored() {
+        goalsScored++;
     }
 }

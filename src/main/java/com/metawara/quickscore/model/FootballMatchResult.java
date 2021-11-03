@@ -1,27 +1,35 @@
 package com.metawara.quickscore.model;
 
 public class FootballMatchResult {
-    private final MatchStatistics homeSideMatchStatistics;
-    private final MatchStatistics awaySideMatchStatistics;
+    private FootballClubMatchStatistics homeSideStatistics;
+    private FootballClubMatchStatistics awaySideStatistics;
 
-    public FootballMatchResult(MatchStatistics homeSideMatchStatistics, MatchStatistics awaySideMatchStatistics) {
-        this.homeSideMatchStatistics = homeSideMatchStatistics;
-        this.awaySideMatchStatistics = awaySideMatchStatistics;
+    public FootballMatchResult(FootballClubMatchStatistics homeSideStatistics, FootballClubMatchStatistics awaySideStatistics) {
+        this.homeSideStatistics = homeSideStatistics;
+        this.awaySideStatistics = awaySideStatistics;
     }
 
-    public MatchStatistics getHomeSideMatchStatistics() {
-        return homeSideMatchStatistics;
+    public FootballClubMatchStatistics getHomeSideMatchStatistics() {
+        return homeSideStatistics;
     }
 
-    public MatchStatistics getAwaySideMatchStatistics() {
-        return awaySideMatchStatistics;
+    public FootballClubMatchStatistics getAwaySideMatchStatistics() {
+        return awaySideStatistics;
     }
 
-    public String getHomeSideResult(){
-        return homeSideMatchStatistics.getFootballClub().getName() + " - " + homeSideMatchStatistics.getGoalsScored();
+    public void addHomeSideGoal() {
+        homeSideStatistics.increaseGoalsScored();
     }
 
-    public String getAwaySideResult(){
-        return awaySideMatchStatistics.getFootballClub().getName() + " - " + awaySideMatchStatistics.getGoalsScored();
+    public void addAwaySideGoal() {
+        awaySideStatistics.increaseGoalsScored();
+    }
+
+    public String getHomeSideResult() {
+        return homeSideStatistics.getFootballClub().getName() + " - " + homeSideStatistics.getGoalsScored();
+    }
+
+    public String getAwaySideResult() {
+        return awaySideStatistics.getFootballClub().getName() + " - " + awaySideStatistics.getGoalsScored();
     }
 }

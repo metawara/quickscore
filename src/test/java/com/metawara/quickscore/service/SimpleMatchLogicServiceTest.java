@@ -25,7 +25,7 @@ public class SimpleMatchLogicServiceTest {
     private MatchLogic matchLogic = new SimpleMatchLogicService();
 
     @Test
-    public void simulateMatch_victory() {
+    public void simulateMatch_shouldResultInVictoryForHomeSide() {
         Mockito.when(footballClub1.getChanceOfWinning()).thenReturn(0.75);
         Mockito.when(footballClub2.getChanceOfWinning()).thenReturn(0.5);
 
@@ -34,7 +34,16 @@ public class SimpleMatchLogicServiceTest {
     }
 
     @Test
-    public void simulateMatch_draw() {
+    public void simulateMatch_shouldResultInVictoryForAwaySide() {
+        Mockito.when(footballClub1.getChanceOfWinning()).thenReturn(0.5);
+        Mockito.when(footballClub2.getChanceOfWinning()).thenReturn(0.55);
+
+        FootballMatchResult footballMatchResult = matchLogic.simulateMatch(footballClub1, footballClub2);
+        assertTrue(footballMatchResult.getAwaySideMatchStatistics().getGoalsScored() > footballMatchResult.getHomeSideMatchStatistics().getGoalsScored());
+    }
+
+    @Test
+    public void simulateMatch_shouldResultInDraw() {
         Mockito.when(footballClub1.getChanceOfWinning()).thenReturn(0.5);
         Mockito.when(footballClub2.getChanceOfWinning()).thenReturn(0.5);
 

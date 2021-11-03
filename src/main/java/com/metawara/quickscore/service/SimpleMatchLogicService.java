@@ -1,8 +1,8 @@
 package com.metawara.quickscore.service;
 
 import com.metawara.quickscore.model.FootballClub;
+import com.metawara.quickscore.model.FootballClubMatchStatistics;
 import com.metawara.quickscore.model.FootballMatchResult;
-import com.metawara.quickscore.model.MatchStatistics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -16,6 +16,9 @@ public class SimpleMatchLogicService implements MatchLogic {
 
     @Override
     public FootballMatchResult simulateMatch(FootballClub homeSide, FootballClub awaySide) {
+        FootballClubMatchStatistics homeSideStatistics = new FootballClubMatchStatistics(homeSide, 0);
+        FootballClubMatchStatistics awaySideStatistics = new FootballClubMatchStatistics(awaySide, 0);
+
         int homeSideGoalsScored;
         int awaySideGoalsScored;
 
@@ -34,11 +37,22 @@ public class SimpleMatchLogicService implements MatchLogic {
             awaySideGoalsScored = homeSideGoalsScored;
         }
 
+        increaseGoals(homeSideStatistics, awaySideStatistics, homeSideGoalsScored, awaySideGoalsScored);
+
         logger.debug("{} // {}", homeSideGoalsScored, awaySideGoalsScored);
 
-        MatchStatistics homeSideMatchStatistics = new MatchStatistics(homeSide, homeSideGoalsScored);
-        MatchStatistics awaySideMatchStatistics = new MatchStatistics(awaySide, awaySideGoalsScored);
+        return new FootballMatchResult(homeSideStatistics, awaySideStatistics);
+    }
 
-        return new FootballMatchResult(homeSideMatchStatistics, awaySideMatchStatistics);
+
+
+    private void increaseGoals(FootballClubMatchStatistics homeSideStatistics, FootballClubMatchStatistics awaySideStatistics, int homeSideGoalsScored, int awaySideGoalsScored) {
+        for (int i = 0; i < homeSideGoalsScored; i++) {
+            homeSideStatistics.increaseGoalsScored();
+        }
+
+        for (int i = 0; i < awaySideGoalsScored; i++) {
+            awaySideStatistics.increaseGoalsScored();
+        }
     }
 }
