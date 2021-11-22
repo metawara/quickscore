@@ -1,6 +1,6 @@
 package com.metawara.quickscore.match.manager;
 
-import com.metawara.quickscore.display.SimpleResultsDisplay;
+import com.metawara.quickscore.display.SimpleResultsPrinter;
 import com.metawara.quickscore.match.logic.SimpleMatchLogic;
 import com.metawara.quickscore.model.match.Match;
 import com.metawara.quickscore.validator.RosterValidator;
@@ -17,9 +17,9 @@ public class SimpleMatchManager implements MatchManager {
     private static final Logger logger = LoggerFactory.getLogger(SimpleMatchManager.class);
 
     private final SimpleMatchLogic matchLogic;
-    private final SimpleResultsDisplay resultsDisplay;
+    private final SimpleResultsPrinter resultsDisplay;
 
-    public SimpleMatchManager(SimpleMatchLogic matchLogic, SimpleResultsDisplay resultsDisplay) {
+    public SimpleMatchManager(SimpleMatchLogic matchLogic, SimpleResultsPrinter resultsDisplay) {
         this.matchLogic = matchLogic;
         this.resultsDisplay = resultsDisplay;
     }
@@ -35,7 +35,7 @@ public class SimpleMatchManager implements MatchManager {
         if (RosterValidator.validate(match.getHomeSideMatchStatistics().getMatchRoster())
                 && RosterValidator.validate(match.getAwaySideMatchStatistics().getMatchRoster())) {
             Match matchResult = matchLogic.simulateMatch(match);
-            resultsDisplay.display(matchResult);
+            resultsDisplay.print(matchResult);
             return matchResult;
         } else {
             logger.error("Unable to validate rosters. Returning un-simulated match.");

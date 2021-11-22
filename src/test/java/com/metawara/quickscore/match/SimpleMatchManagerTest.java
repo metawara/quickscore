@@ -5,7 +5,7 @@ import com.metawara.quickscore.match.manager.SimpleMatchManager;
 import com.metawara.quickscore.model.FootballClub;
 import com.metawara.quickscore.model.match.Match;
 import com.metawara.quickscore.model.match.FCMatchStatistics;
-import com.metawara.quickscore.display.SimpleResultsDisplay;
+import com.metawara.quickscore.display.SimpleResultsPrinter;
 import com.metawara.quickscore.model.roster.MatchRoster;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,7 +50,7 @@ public class SimpleMatchManagerTest {
 
     @Test
     public void verify_shouldFinishWithoutErrors() {
-        SimpleMatchManager mc = new SimpleMatchManager(matchLogic, new SimpleResultsDisplay());
+        SimpleMatchManager mc = new SimpleMatchManager(matchLogic, new SimpleResultsPrinter());
         Match matchResult = mc.manageMatch(match);
 
         assertEquals(matchResult.getHomeSideMatchStatistics().getFootballClub(), footballClub1);

@@ -4,11 +4,11 @@ import com.metawara.quickscore.model.match.Match;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SimpleResultsDisplay {
+public class SimpleResultsPrinter {
 
-    private static final Logger logger = LoggerFactory.getLogger(SimpleResultsDisplay.class);
+    private static final Logger logger = LoggerFactory.getLogger(SimpleResultsPrinter.class);
 
-    public void display(Match match) {
+    public void print(Match match) {
         logger.info("{} - {}", match.getHomeSideResult(), match.getAwaySideResult());
     }
 }
