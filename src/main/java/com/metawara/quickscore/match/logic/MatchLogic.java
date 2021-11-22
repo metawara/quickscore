@@ -1,6 +1,6 @@
 package com.metawara.quickscore.match.logic;
 
-import com.metawara.quickscore.model.match.Match;
+import com.metawara.quickscore.model.match.FCMatch;
 
 /**
  * MatchLogic-implementing classes, for a given, clean-slate, prepared Match object,
@@ -8,5 +8,5 @@ import com.metawara.quickscore.model.match.Match;
  */
 
 public interface MatchLogic {
-    Match simulateMatch(Match match);
+    FCMatch simulateMatch(FCMatch match);
 }

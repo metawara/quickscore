@@ -1,7 +1,7 @@
 package com.metawara.quickscore.match.manager;
 
-import com.metawara.quickscore.model.match.Match;
+import com.metawara.quickscore.model.match.FCMatch;
 
 public interface MatchManager {
-    Match manageMatch(Match match);
+    FCMatch manageMatch(FCMatch match);
 }

@@ -1,10 +1,17 @@
 package com.metawara.quickscore.model.match;
 
-public class Match {
+import com.metawara.quickscore.model.FootballClub;
+
+public class FCMatch {
     private FCMatchStatistics homeSideStatistics;
     private FCMatchStatistics awaySideStatistics;
 
-    public Match(FCMatchStatistics homeSideStatistics, FCMatchStatistics awaySideStatistics) {
+    public FCMatch(FootballClub homeSide, FootballClub awaySide){
+        this.homeSideStatistics = new FCMatchStatistics(homeSide, 0);
+        this.awaySideStatistics = new FCMatchStatistics(awaySide, 0);
+    }
+
+    public FCMatch(FCMatchStatistics homeSideStatistics, FCMatchStatistics awaySideStatistics) {
         this.homeSideStatistics = homeSideStatistics;
         this.awaySideStatistics = awaySideStatistics;
     }

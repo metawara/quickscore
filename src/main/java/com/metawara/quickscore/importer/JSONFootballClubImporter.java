@@ -41,7 +41,7 @@ public class JSONFootballClubImporter implements FootballClubImporter {
 
     private List<FootballClub> convertArrayIntoList(FootballClub[] importedClubs) {
         if (importedClubs.length != 0) {
-            logger.debug("Looks like I managed to import something from a String...");
+            logger.debug("Looks like I managed to import something...");
         }
         List<FootballClub> clubs = List.of(importedClubs);
         logger.debug("Imported clubs: {}", clubs);

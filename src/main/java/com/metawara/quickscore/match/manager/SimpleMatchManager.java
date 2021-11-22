@@ -2,7 +2,7 @@ package com.metawara.quickscore.match.manager;
 
 import com.metawara.quickscore.display.SimpleResultsPrinter;
 import com.metawara.quickscore.match.logic.SimpleMatchLogic;
-import com.metawara.quickscore.model.match.Match;
+import com.metawara.quickscore.model.match.FCMatch;
 import com.metawara.quickscore.validator.RosterValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,10 +31,10 @@ public class SimpleMatchManager implements MatchManager {
      * @return simulated match with resolved scoreline
      */
     @Override
-    public Match manageMatch(Match match) {
+    public FCMatch manageMatch(FCMatch match) {
         if (RosterValidator.validate(match.getHomeSideMatchStatistics().getMatchRoster())
                 && RosterValidator.validate(match.getAwaySideMatchStatistics().getMatchRoster())) {
-            Match matchResult = matchLogic.simulateMatch(match);
+            FCMatch matchResult = matchLogic.simulateMatch(match);
             resultsDisplay.print(matchResult);
             return matchResult;
         } else {

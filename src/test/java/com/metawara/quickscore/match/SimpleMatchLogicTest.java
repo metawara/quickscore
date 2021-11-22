@@ -4,7 +4,7 @@ import com.metawara.quickscore.match.logic.MatchLogic;
 import com.metawara.quickscore.match.logic.SimpleMatchLogic;
 import com.metawara.quickscore.model.FootballClub;
 import com.metawara.quickscore.model.match.FCMatchStatistics;
-import com.metawara.quickscore.model.match.Match;
+import com.metawara.quickscore.model.match.FCMatch;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class SimpleMatchLogicTest {
 
     @Mock
-    private Match matchMock;
+    private FCMatch matchMock;
 
     @Mock
     private FCMatchStatistics fc1MatchStatistics;
@@ -51,7 +51,7 @@ public class SimpleMatchLogicTest {
         Mockito.when(fc1MatchStatistics.getGoalsScored()).thenReturn(3);
         Mockito.when(fc2MatchStatistics.getGoalsScored()).thenReturn(2);
 
-        Match match = matchLogic.simulateMatch(matchMock);
+        FCMatch match = matchLogic.simulateMatch(matchMock);
         assertTrue(match.getHomeSideMatchStatistics().getGoalsScored() > match.getAwaySideMatchStatistics().getGoalsScored());
     }
 
@@ -63,7 +63,7 @@ public class SimpleMatchLogicTest {
         Mockito.when(fc1MatchStatistics.getGoalsScored()).thenReturn(2);
         Mockito.when(fc2MatchStatistics.getGoalsScored()).thenReturn(5);
 
-        Match match = matchLogic.simulateMatch(matchMock);
+        FCMatch match = matchLogic.simulateMatch(matchMock);
         assertTrue(match.getAwaySideMatchStatistics().getGoalsScored() > match.getHomeSideMatchStatistics().getGoalsScored());
     }
 
@@ -72,7 +72,7 @@ public class SimpleMatchLogicTest {
         Mockito.when(matchMock.getHomeSideWinningChance()).thenReturn(0.5);
         Mockito.when(matchMock.getAwaySideWinningChance()).thenReturn(0.5);
 
-        Match match = matchLogic.simulateMatch(matchMock);
+        FCMatch match = matchLogic.simulateMatch(matchMock);
         assertEquals(match.getHomeSideMatchStatistics().getGoalsScored(), match.getAwaySideMatchStatistics().getGoalsScored());
 
     }

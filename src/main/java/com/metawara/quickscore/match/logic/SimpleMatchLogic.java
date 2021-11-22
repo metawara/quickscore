@@ -1,7 +1,7 @@
 package com.metawara.quickscore.match.logic;
 
 import com.metawara.quickscore.model.match.FCMatchStatistics;
-import com.metawara.quickscore.model.match.Match;
+import com.metawara.quickscore.model.match.FCMatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +18,7 @@ public class SimpleMatchLogic implements MatchLogic {
     private static final Logger logger = LoggerFactory.getLogger(SimpleMatchLogic.class);
 
     @Override
-    public Match simulateMatch(Match match) {
+    public FCMatch simulateMatch(FCMatch match) {
 
         int homeSideGoalsScored;
         int awaySideGoalsScored;
