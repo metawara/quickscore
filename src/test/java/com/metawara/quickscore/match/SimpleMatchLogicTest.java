@@ -1,5 +1,7 @@
-package com.metawara.quickscore.service;
+package com.metawara.quickscore.match;
 
+import com.metawara.quickscore.match.logic.MatchLogic;
+import com.metawara.quickscore.match.logic.SimpleMatchLogic;
 import com.metawara.quickscore.model.FootballClub;
 import com.metawara.quickscore.model.match.FCMatchStatistics;
 import com.metawara.quickscore.model.match.Match;
@@ -14,9 +16,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SpringBootTest(classes = SimpleMatchLogicService.class)
+@SpringBootTest(classes = SimpleMatchLogic.class)
 @RunWith(MockitoJUnitRunner.class)
-public class SimpleMatchLogicServiceTest {
+public class SimpleMatchLogicTest {
 
     @Mock
     private Match matchMock;
@@ -33,7 +35,7 @@ public class SimpleMatchLogicServiceTest {
     @Mock
     private FootballClub footballClub2;
 
-    private MatchLogic matchLogic = new SimpleMatchLogicService();
+    private MatchLogic matchLogic = new SimpleMatchLogic();
 
     @Before
     public void initialize(){

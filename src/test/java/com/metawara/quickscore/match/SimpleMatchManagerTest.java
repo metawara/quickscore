@@ -1,5 +1,7 @@
-package com.metawara.quickscore.service;
+package com.metawara.quickscore.match;
 
+import com.metawara.quickscore.match.logic.SimpleMatchLogic;
+import com.metawara.quickscore.match.manager.SimpleMatchManager;
 import com.metawara.quickscore.model.FootballClub;
 import com.metawara.quickscore.model.match.Match;
 import com.metawara.quickscore.model.match.FCMatchStatistics;
@@ -15,7 +17,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
-public class MatchResolverServiceTest {
+public class SimpleMatchManagerTest {
 
     private static final String CLUB_1_NAME = "Club Name 1";
     private static final String CLUB_2_NAME = "Club Name 2";
@@ -32,7 +34,7 @@ public class MatchResolverServiceTest {
     private MatchRoster roster;
 
     @Mock
-    private MatchLogic matchLogic;
+    private SimpleMatchLogic matchLogic;
 
     @Mock
     FCMatchStatistics FCMatchStatistics1;
@@ -48,8 +50,8 @@ public class MatchResolverServiceTest {
 
     @Test
     public void verify_shouldFinishWithoutErrors() {
-        MatchResolverService mc = new MatchResolverService(matchLogic, new SimpleResultsDisplay());
-        Match matchResult = mc.resolve(match);
+        SimpleMatchManager mc = new SimpleMatchManager(matchLogic, new SimpleResultsDisplay());
+        Match matchResult = mc.manageMatch(match);
 
         assertEquals(matchResult.getHomeSideMatchStatistics().getFootballClub(), footballClub1);
         assertEquals(matchResult.getAwaySideMatchStatistics().getFootballClub(), footballClub2);

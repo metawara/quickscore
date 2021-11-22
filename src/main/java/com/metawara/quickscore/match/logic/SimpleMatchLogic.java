@@ -1,17 +1,21 @@
-package com.metawara.quickscore.service;
+package com.metawara.quickscore.match.logic;
 
 import com.metawara.quickscore.model.match.FCMatchStatistics;
 import com.metawara.quickscore.model.match.Match;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 import java.util.Random;
 
-@Service
-public class SimpleMatchLogicService implements MatchLogic {
 
-    private static final Logger logger = LoggerFactory.getLogger(SimpleMatchLogicService.class);
+/**
+ * Simple match logic that only generates score lines (without generating any events, such as
+ * scored goals assigned to a footballer, injuries, substitutions and such).
+ * Depends solely on winning chance and generates a result based on them.
+ */
+public class SimpleMatchLogic implements MatchLogic {
+
+    private static final Logger logger = LoggerFactory.getLogger(SimpleMatchLogic.class);
 
     @Override
     public Match simulateMatch(Match match) {
