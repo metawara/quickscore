@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Set;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -18,7 +18,13 @@ public class JsonFootballClubImporterTest {
 
     @Test
     public void importFootballClubsFromAJson_shouldSucceed(){
-        Set<FootballClub> clubs = importer.importClubs();
+        List<FootballClub> clubs = importer.importClubs();
         assertEquals(4, clubs.size());
+    }
+
+    @Test
+    public void importFootballClubsFromAJson_nonSampleFile_shouldSucceed(){
+        List<FootballClub> clubs = importer.importClubs("sampleroster2.json");
+        assertEquals(6, clubs.size());
     }
 }
