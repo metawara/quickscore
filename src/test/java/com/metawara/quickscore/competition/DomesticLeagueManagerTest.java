@@ -29,18 +29,32 @@ public class DomesticLeagueManagerTest {
     @Mock
     MatchManager matchManager;
 
+    List<FootballClub> clubs;
+
     @Before
     public void init(){
-        List<FootballClub> clubs = prepareMockedClubs();
+        clubs = prepareMockedClubs();
         Mockito.when(importer.importClubs()).thenReturn(clubs);
     }
 
     @Test
-    public void simulateAMatchWeek_shouldGenerateCorrectPairs() {
+    public void simulateASeason_shouldProperlyGenerateFixtures(){
         domesticLeagueManager = new DomesticLeagueManager(matchManager, importer);
-        domesticLeagueManager.simulateWeek();
+        simulateWeeks();
 
-        assertEquals(2, domesticLeagueManager.getWeekCounter());
+        assertEquals(clubs.size() * 2L - 2, domesticLeagueManager.getWeekCounter());
+        assertEquals((long) clubs.size() * clubs.size() - clubs.size(), domesticLeagueManager.getMatchWeekHistory()
+                .values().stream().mapToLong(List::size).sum());
+
+    }
+
+    private void simulateWeeks() {
+        int weekCounter = clubs.size() * 2 - 2;
+        int i = 0;
+        while( i < weekCounter){
+            domesticLeagueManager.simulateWeek();
+            i++;
+        }
     }
 
     private List<FootballClub> prepareMockedClubs() {
@@ -56,6 +70,24 @@ public class DomesticLeagueManagerTest {
         FootballClub fc4 = Mockito.mock(FootballClub.class);
         Mockito.when(fc4.getName()).thenReturn("Football Club 4");
 
-        return List.of(fc1, fc2, fc3, fc4);
+        FootballClub fc5 = Mockito.mock(FootballClub.class);
+        Mockito.when(fc5.getName()).thenReturn("Football Club 5");
+
+        FootballClub fc6 = Mockito.mock(FootballClub.class);
+        Mockito.when(fc6.getName()).thenReturn("Football Club 6");
+
+        FootballClub fc7 = Mockito.mock(FootballClub.class);
+        Mockito.when(fc7.getName()).thenReturn("Football Club 7");
+
+        FootballClub fc8 = Mockito.mock(FootballClub.class);
+        Mockito.when(fc8.getName()).thenReturn("Football Club 8");
+
+        FootballClub fc9 = Mockito.mock(FootballClub.class);
+        Mockito.when(fc9.getName()).thenReturn("Football Club 9");
+
+        FootballClub fc10 = Mockito.mock(FootballClub.class);
+        Mockito.when(fc10.getName()).thenReturn("Football Club 10");
+
+        return List.of(fc1, fc2, fc3, fc4, fc5, fc6, fc7, fc8, fc9, fc10);
     }
 }

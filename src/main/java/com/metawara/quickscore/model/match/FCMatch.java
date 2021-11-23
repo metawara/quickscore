@@ -16,6 +16,14 @@ public class FCMatch {
         this.awaySideStatistics = awaySideStatistics;
     }
 
+    @Override
+    public String toString() {
+        return "FCMatch{" +
+                "homeSideStatistics=" + homeSideStatistics +
+                ", awaySideStatistics=" + awaySideStatistics +
+                '}';
+    }
+
     public FCMatchStatistics getHomeSideMatchStatistics() {
         return homeSideStatistics;
     }
