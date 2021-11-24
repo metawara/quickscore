@@ -34,26 +34,25 @@ public class DomesticLeagueManager {
     }
 
     private void generateMatchWeeks() {
-        generateMatchups();
+        initializeMatchups();
 
         int internalWeekCounter = 1;
-        List<FCMatch> matchesForCureentWeek = new ArrayList<>();
-        while(internalWeekCounter <= leagueClubs.size() * 2 - 2){
+        List<FCMatch> matchesForCurrentWeek = new ArrayList<>();
 
-            logger.debug("Generating fixtures for week {}", internalWeekCounter);
-            int[][] pairs = generatePairs();
+        while (internalWeekCounter <= leagueClubs.size() * 2 - 2) {
+            int[][] weeklyMatchupIds = generateMatchupsForAWeek();
 
-            if (pairs.length == 0) {
-                logger.debug("Resetting generation...");
-                generateMatchups();
+            if (weeklyMatchupIds.length == 0) {
+                logger.debug("Encountered a match-making deadlock. Reverting to the beginning...");
+                initializeMatchups();
                 internalWeekCounter = 1;
             } else {
-                for (int[] pair : pairs) {
-                    matchups.get(pair[0]).remove(Integer.valueOf(pair[1]));
-                    matchesForCureentWeek.add(new FCMatch(leagueClubs.get(pair[0] - 1), leagueClubs.get(pair[1] - 1)));
+                for (int[] matchup : weeklyMatchupIds) {
+                    matchups.get(matchup[0]).remove(Integer.valueOf(matchup[1]));
+                    matchesForCurrentWeek.add(new FCMatch(leagueClubs.get(matchup[0] - 1), leagueClubs.get(matchup[1] - 1)));
                 }
-                matchWeekHistory.put(internalWeekCounter, new ArrayList<>(matchesForCureentWeek));
-                matchesForCureentWeek.clear();
+                matchWeekHistory.put(internalWeekCounter, new ArrayList<>(matchesForCurrentWeek));
+                matchesForCurrentWeek.clear();
                 internalWeekCounter++;
             }
         }
@@ -79,50 +78,64 @@ public class DomesticLeagueManager {
         return weekCounter > MAXIMUM_AMOUNT_OF_MATCHES;
     }
 
-    private int[][] generatePairs() {
-        List<Integer> availableClubsToPickFrom = IntStream.rangeClosed(1, 10).boxed().collect(Collectors.toList());
+    /**
+     * This algorithm NEEDS a change in the future.
+     */
+    private int[][] generateMatchupsForAWeek() {
+        List<Integer> availableClubsToPickFrom = IntStream.rangeClosed(1, leagueClubs.size()).boxed().collect(Collectors.toList());
         int[][] pairs = new int[leagueClubs.size() / 2][2];
         int pairsFound = 0;
 
         while (!availableClubsToPickFrom.isEmpty()) {
-            int homeSideId = availableClubsToPickFrom.get(rand.nextInt(availableClubsToPickFrom.size()));
+            int homeSideId = pickRandomClub(availableClubsToPickFrom);
             availableClubsToPickFrom.remove(Integer.valueOf(homeSideId));
 
             List<Integer> homeSideAvailableMatchups = matchups.get(homeSideId);
 
             int retries = 0;
             while (homeSideAvailableMatchups.isEmpty()) {
-                int buf = homeSideId;
-                homeSideId = availableClubsToPickFrom.get(rand.nextInt(availableClubsToPickFrom.size()));
-                availableClubsToPickFrom.remove(Integer.valueOf(homeSideId));
-                availableClubsToPickFrom.add(buf);
+                homeSideId = swapHomeSideId(availableClubsToPickFrom, homeSideId);
 
                 homeSideAvailableMatchups = matchups.get(homeSideId);
                 retries++;
-                if (retries > 20) {
-                    logger.debug("Couldn't find pairings...");
+                if (retries > 10) {
                     return new int[0][0];
                 }
             }
-            int awaySideId = homeSideAvailableMatchups.get(rand.nextInt(homeSideAvailableMatchups.size()));
+
+            int awaySideId = pickRandomClub(homeSideAvailableMatchups);
 
             if (!availableClubsToPickFrom.remove(Integer.valueOf(awaySideId))) {
                 pairs = new int[leagueClubs.size() / 2][2];
                 pairsFound = 0;
-                availableClubsToPickFrom = IntStream.rangeClosed(1, 10).boxed().collect(Collectors.toList());
+                availableClubsToPickFrom = IntStream.rangeClosed(1, leagueClubs.size()).boxed().collect(Collectors.toList());
             } else {
-                pairs[pairsFound][0] = homeSideId;
-                pairs[pairsFound][1] = awaySideId;
+                savePair(pairs, pairsFound, homeSideId, awaySideId);
                 pairsFound++;
             }
         }
 
-        String pairsStr = Arrays.deepToString(pairs);
-        logger.debug("Found pairs: {}", pairsStr);
         return pairs;
     }
 
-    private void generateMatchups() {
+    private void savePair(int[][] pairs, int pairsFound, int homeSideId, int awaySideId) {
+        pairs[pairsFound][0] = homeSideId;
+        pairs[pairsFound][1] = awaySideId;
+    }
+
+    private int swapHomeSideId(List<Integer> availableClubsToPickFrom, int homeSideId) {
+        int buf = homeSideId;
+        homeSideId = pickRandomClub(availableClubsToPickFrom);
+        availableClubsToPickFrom.remove(Integer.valueOf(homeSideId));
+        availableClubsToPickFrom.add(buf);
+        return homeSideId;
+    }
+
+    private Integer pickRandomClub(List<Integer> availableClubsToPickFrom) {
+        return availableClubsToPickFrom.get(rand.nextInt(availableClubsToPickFrom.size()));
+    }
+
+    private void initializeMatchups() {
         matchups = new HashMap<>();
         matchWeekHistory = new HashMap<>();
         for (int a = 1; a < leagueClubs.size() + 1; a++) {
@@ -130,6 +143,7 @@ public class DomesticLeagueManager {
             specificMatchups.remove(a - 1);
             matchups.put(a, specificMatchups);
         }
+        logger.debug("Matchups initialized for league size: {}.", leagueClubs.size());
     }
 
     public int getWeekCounter() {
