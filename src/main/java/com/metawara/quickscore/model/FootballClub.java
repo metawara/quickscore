@@ -16,4 +16,12 @@ public class FootballClub {
     public double getChanceOfWinning() {
         return chanceOfWinning;
     }
+
+    @Override
+    public String toString() {
+        return "FootballClub{" +
+                "name='" + name + '\'' +
+                ", chanceOfWinning=" + chanceOfWinning +
+                '}';
+    }
 }
