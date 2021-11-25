@@ -64,9 +64,9 @@ public class SimpleMatchManagerTest {
         Mockito.when(match.getAwaySideMatchStatistics()).thenReturn(FCMatchStatistics2);
         Mockito.when(match.getHomeSideMatchStatistics().getFootballClub()).thenReturn(footballClub1);
         Mockito.when(match.getAwaySideMatchStatistics().getFootballClub()).thenReturn(footballClub2);
-        Mockito.when(match.getHomeSideMatchStatistics().getMatchRoster()).thenReturn(roster);
     }
 
     private void mockMatchLogic() {
+        Mockito.when(matchLogic.simulateMatch(match)).thenReturn(match);
     }
 }

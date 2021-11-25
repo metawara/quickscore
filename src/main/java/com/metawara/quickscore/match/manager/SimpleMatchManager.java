@@ -3,9 +3,6 @@ package com.metawara.quickscore.match.manager;
 import com.metawara.quickscore.display.SimpleResultsPrinter;
 import com.metawara.quickscore.match.logic.SimpleMatchLogic;
 import com.metawara.quickscore.model.match.FCMatch;
-import com.metawara.quickscore.validator.RosterValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -13,8 +10,6 @@ import org.slf4j.LoggerFactory;
  */
 
 public class SimpleMatchManager implements MatchManager {
-
-    private static final Logger logger = LoggerFactory.getLogger(SimpleMatchManager.class);
 
     private final SimpleMatchLogic matchLogic;
     private final SimpleResultsPrinter resultsDisplay;
@@ -32,14 +27,8 @@ public class SimpleMatchManager implements MatchManager {
      */
     @Override
     public FCMatch manageMatch(FCMatch match) {
-        if (RosterValidator.validate(match.getHomeSideMatchStatistics().getMatchRoster())
-                && RosterValidator.validate(match.getAwaySideMatchStatistics().getMatchRoster())) {
             FCMatch matchResult = matchLogic.simulateMatch(match);
             resultsDisplay.print(matchResult);
             return matchResult;
-        } else {
-            logger.error("Unable to validate rosters. Returning un-simulated match.");
-            return match;
-        }
     }
 }

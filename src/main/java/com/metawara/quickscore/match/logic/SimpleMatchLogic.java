@@ -16,6 +16,7 @@ import java.util.Random;
 public class SimpleMatchLogic implements MatchLogic {
 
     private static final Logger logger = LoggerFactory.getLogger(SimpleMatchLogic.class);
+    Random rand = new Random();
 
     @Override
     public FCMatch simulateMatch(FCMatch match) {
@@ -29,20 +30,20 @@ public class SimpleMatchLogic implements MatchLogic {
         logger.debug("{} // {}", homeSideWinningChance, awaySideWinningChance);
 
         if (homeSideWinningChance > awaySideWinningChance) {
-            homeSideGoalsScored = new Random().nextInt(4) + 1;
-            awaySideGoalsScored = homeSideGoalsScored - new Random().nextInt(homeSideGoalsScored);
+            homeSideGoalsScored = rand.nextInt(4) + 1;
+            awaySideGoalsScored = homeSideGoalsScored - rand.nextInt(homeSideGoalsScored);
             homeSideGoalsScored++;
         } else if (homeSideWinningChance < awaySideWinningChance) {
-            awaySideGoalsScored = new Random().nextInt(4) + 1;
-            homeSideGoalsScored = awaySideGoalsScored - new Random().nextInt(awaySideGoalsScored);
+            awaySideGoalsScored = rand.nextInt(4) + 1;
+            homeSideGoalsScored = awaySideGoalsScored - rand.nextInt(awaySideGoalsScored);
             awaySideGoalsScored++;
         } else {
-            homeSideGoalsScored = new Random().nextInt(5);
+            homeSideGoalsScored = rand.nextInt(5);
             awaySideGoalsScored = homeSideGoalsScored;
         }
 
         increaseGoals(match.getHomeSideMatchStatistics(), homeSideGoalsScored);
-        increaseGoals(match.getAwaySideMatchStatistics(), homeSideGoalsScored);
+        increaseGoals(match.getAwaySideMatchStatistics(), awaySideGoalsScored);
 
         logger.debug("{} // {}", homeSideGoalsScored, awaySideGoalsScored);
 

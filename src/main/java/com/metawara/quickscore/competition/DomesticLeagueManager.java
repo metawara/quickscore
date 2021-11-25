@@ -10,6 +10,10 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Provides control of all actions related to league managing (automatic generation of league schedule
+ * for provided clubs, triggering simulation of matches for a given week).
+ */
 public class DomesticLeagueManager {
 
     private static final Logger logger = LoggerFactory.getLogger(DomesticLeagueManager.class);
@@ -20,25 +24,29 @@ public class DomesticLeagueManager {
     private int weekCounter = 0;
 
     private final MatchManager matchManager;
+    StandingsManager standingsManager;
 
     public DomesticLeagueManager(MatchManager matchManager, FootballClubImporter importer) {
         this.matchManager = matchManager;
         leagueClubs = importer.importClubs();
+        standingsManager = new StandingsManager(leagueClubs);
         matchWeekHistory = new MatchScheduleGenerator().generateMatchWeeks(leagueClubs);
     }
 
-    void simulateWeek() {
+    public void simulateWeek() {
         if (isLeagueOver()) {
             logger.warn("All matches in the league have been simulated. Unable to simulate more matches.");
             return;
         }
-
+        weekCounter++;
         for (FCMatch match : matchWeekHistory.get(weekCounter)) {
             matchManager.manageMatch(match);
+            standingsManager.updateFromMatch(match);
         }
 
         logger.debug("Match week {} finished.", weekCounter);
-        weekCounter++;
+        logger.debug("Standings after week {}: {}.", weekCounter, standingsManager.getSortedStandings());
+
     }
 
     private boolean isLeagueOver() {
