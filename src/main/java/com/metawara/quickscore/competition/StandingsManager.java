@@ -1,37 +1,60 @@
 package com.metawara.quickscore.competition;
 
 import com.metawara.quickscore.model.FootballClub;
+import com.metawara.quickscore.model.TableResults;
 import com.metawara.quickscore.model.match.FCMatch;
 import com.metawara.quickscore.model.match.FCMatchStatistics;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class StandingsManager {
 
-    Map<String, Integer> standings;
+    List<TableResults> tableResults = new ArrayList<>();
 
     public StandingsManager(List<FootballClub> leagueClubs) {
-        standings = new TreeMap<>();
-
-        for (FootballClub footballClub : leagueClubs) {
-            standings.put(footballClub.getName(), 0);
+        for (FootballClub club : leagueClubs) {
+            tableResults.add(new TableResults(club));
         }
     }
 
     public void updateFromMatch(FCMatch match) {
-        if(matchFinishedInADraw(match)){
-            putPoints(match.getHomeSideMatchStatistics(), 1);
-            putPoints(match.getAwaySideMatchStatistics(), 1);
+        int homeSidePoints = 0;
+        int awaySidePoints = 0;
+        if (matchFinishedInADraw(match)) {
+            homeSidePoints = 1;
+            awaySidePoints = 1;
         } else if (homeSideWonMatch(match)) {
-            putPoints(match.getHomeSideMatchStatistics(), 3);
+            homeSidePoints = 3;
         } else {
-            putPoints(match.getAwaySideMatchStatistics(), 3);
+            awaySidePoints = 3;
         }
+        updateStandingsForClub(match.getHomeSideMatchStatistics(), homeSidePoints);
+        updateGBForClub(match.getHomeSideMatchStatistics(), match.getAwaySideMatchStatistics().getGoalsScored());
+
+        updateStandingsForClub(match.getAwaySideMatchStatistics(), awaySidePoints);
+        updateGBForClub(match.getAwaySideMatchStatistics(), match.getHomeSideMatchStatistics().getGoalsScored());
     }
 
-    private void putPoints(FCMatchStatistics matchStatistics, int pointsAwarded) {
-        standings.put(matchStatistics.getFootballClub().getName(), standings.get(matchStatistics.getFootballClub().getName()) + pointsAwarded);
+    private void updateGBForClub(FCMatchStatistics matchStatistics, int goalsConceded) {
+        TableResults results = findResults(matchStatistics);
+
+        results.updateGoalsScored(matchStatistics.getGoalsScored());
+        results.updateGoalsConceded(goalsConceded);
     }
+
+    private void updateStandingsForClub(FCMatchStatistics matchStatistics, int points) {
+        TableResults results = findResults(matchStatistics);
+
+        results.increaseMatchesPlayed();
+        results.updatePoints(points);
+    }
+
+    private TableResults findResults(FCMatchStatistics matchStatistics) {
+        return tableResults.stream().filter(x -> x.getFootballClub().getName().equals(matchStatistics.getFootballClub().getName()))
+                .collect(Collectors.toList()).get(0);
+    }
+
 
     private boolean matchFinishedInADraw(FCMatch match) {
         return match.getHomeSideMatchStatistics().getGoalsScored() == match.getAwaySideMatchStatistics().getGoalsScored();
@@ -41,12 +64,9 @@ public class StandingsManager {
         return match.getHomeSideMatchStatistics().getGoalsScored() > match.getAwaySideMatchStatistics().getGoalsScored();
     }
 
-    public Map<String, Integer> getSortedStandings() {
-        Map<String, Integer> reverseSortedMap = new LinkedHashMap<>();
-        standings.entrySet().stream()
-                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                .forEachOrdered(x -> reverseSortedMap.put(x.getKey(), x.getValue()));
-        return  reverseSortedMap;
+    public List<TableResults> getSortedStandings() {
+        return tableResults.stream()
+                .sorted(Comparator.comparing(TableResults::getPoints).reversed())
+                .collect(Collectors.toList());
     }
-
 }

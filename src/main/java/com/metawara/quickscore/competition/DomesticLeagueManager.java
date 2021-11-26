@@ -45,7 +45,7 @@ public class DomesticLeagueManager {
         }
 
         logger.debug("Match week {} finished.", weekCounter);
-        logger.debug("Standings after week {}: {}.", weekCounter, standingsManager.getSortedStandings());
+        logger.debug("Standings after week {}: \n\n{}.", weekCounter, standingsManager.getSortedStandings());
 
     }
 
