@@ -2,6 +2,7 @@ package com.metawara.quickscore.competition;
 
 import com.metawara.quickscore.model.FootballClub;
 import com.metawara.quickscore.model.match.FCMatch;
+import com.metawara.quickscore.model.match.MatchWeek;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,8 +18,8 @@ public class MatchScheduleGenerator {
 
     Random rand = new Random();
 
-    Map<Integer, List<FCMatch>> generateMatchWeeks(List<FootballClub> leagueClubs) {
-        Map<Integer, List<FCMatch>> matchWeekHistory = new HashMap<>();
+    List<MatchWeek> generateMatchWeeks(List<FootballClub> leagueClubs) {
+        List<MatchWeek> matchWeekHistory = new ArrayList<>();
         initializeMatchups(leagueClubs, matchWeekHistory);
 
         int internalWeekCounter = 1;
@@ -36,7 +37,7 @@ public class MatchScheduleGenerator {
                     matchups.get(matchup[0]).remove(Integer.valueOf(matchup[1]));
                     matchesForCurrentWeek.add(new FCMatch(leagueClubs.get(matchup[0] - 1), leagueClubs.get(matchup[1] - 1)));
                 }
-                matchWeekHistory.put(internalWeekCounter, new ArrayList<>(matchesForCurrentWeek));
+                matchWeekHistory.add(new MatchWeek(internalWeekCounter, new ArrayList<>(matchesForCurrentWeek)));
                 matchesForCurrentWeek.clear();
                 internalWeekCounter++;
             }
@@ -101,7 +102,7 @@ public class MatchScheduleGenerator {
         return availableClubsToPickFrom.get(rand.nextInt(availableClubsToPickFrom.size()));
     }
 
-    private void initializeMatchups(List<FootballClub> leagueClubs, Map<Integer, List<FCMatch>> matchWeekHistory) {
+    private void initializeMatchups(List<FootballClub> leagueClubs, List<MatchWeek> matchWeekHistory) {
         matchups = new HashMap<>();
         matchWeekHistory.clear();
         for (int a = 1; a < leagueClubs.size() + 1; a++) {

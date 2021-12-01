@@ -4,11 +4,13 @@ import com.metawara.quickscore.importer.FootballClubImporter;
 import com.metawara.quickscore.match.manager.MatchManager;
 import com.metawara.quickscore.model.FootballClub;
 import com.metawara.quickscore.model.match.FCMatch;
+import com.metawara.quickscore.model.match.MatchWeek;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 /**
  * Provides control of all actions related to league managing (automatic generation of league schedule
@@ -18,8 +20,8 @@ public class DomesticLeagueManager {
 
     private static final Logger logger = LoggerFactory.getLogger(DomesticLeagueManager.class);
 
-    List<FootballClub> leagueClubs;
-    Map<Integer, List<FCMatch>> matchWeekHistory;
+    List<FootballClub> participatingClubs;
+    List<MatchWeek> matchWeekHistory;
 
     private int weekCounter = 0;
 
@@ -28,9 +30,9 @@ public class DomesticLeagueManager {
 
     public DomesticLeagueManager(MatchManager matchManager, FootballClubImporter importer) {
         this.matchManager = matchManager;
-        leagueClubs = importer.importClubs();
-        standingsManager = new StandingsManager(leagueClubs);
-        matchWeekHistory = new MatchScheduleGenerator().generateMatchWeeks(leagueClubs);
+        participatingClubs = importer.importClubs();
+        standingsManager = new StandingsManager(participatingClubs);
+        matchWeekHistory = new MatchScheduleGenerator().generateMatchWeeks(participatingClubs);
     }
 
     public void simulateWeek() {
@@ -39,7 +41,9 @@ public class DomesticLeagueManager {
             return;
         }
         weekCounter++;
-        for (FCMatch match : matchWeekHistory.get(weekCounter)) {
+        Optional<MatchWeek> currentWeek = matchWeekHistory.stream().filter(x -> x.getWeekNumber() == weekCounter).findAny();
+        MatchWeek cw = currentWeek.orElse(new MatchWeek(0, new ArrayList<>()));
+        for (FCMatch match : cw.getWeekMatches()) {
             matchManager.manageMatch(match);
             standingsManager.updateFromMatch(match);
         }
@@ -50,14 +54,14 @@ public class DomesticLeagueManager {
     }
 
     private boolean isLeagueOver() {
-        return weekCounter > leagueClubs.size() * 2 - 2;
+        return weekCounter > participatingClubs.size() * 2 - 3;
     }
 
     public int getWeekCounter() {
         return weekCounter;
     }
 
-    public Map<Integer, List<FCMatch>> getMatchWeekHistory() {
+    public List<MatchWeek> getMatchWeekHistory() {
         return matchWeekHistory;
     }
 }

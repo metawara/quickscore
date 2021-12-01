@@ -2,6 +2,7 @@ package com.metawara.quickscore.competition;
 
 import com.metawara.quickscore.model.FootballClub;
 import com.metawara.quickscore.model.match.FCMatch;
+import com.metawara.quickscore.model.match.MatchWeek;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,6 +11,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -32,11 +35,12 @@ public class MatchScheduleGeneratorTest {
     @Test
     public void simulateASeason_shouldProperlyGenerateFixtures() {
         matchScheduleGenerator = new MatchScheduleGenerator();
-        Map<Integer, List<FCMatch>> matchWeekHistory = matchScheduleGenerator.generateMatchWeeks(clubs);
+        List<MatchWeek>  matchWeekHistory = matchScheduleGenerator.generateMatchWeeks(clubs);
 
-
-        assertEquals((long) clubs.size() * clubs.size() - clubs.size(), matchWeekHistory
-                .values().stream().mapToLong(List::size).sum());
+        assertEquals((long) clubs.size() * clubs.size() - clubs.size(),
+                matchWeekHistory.stream()
+                        .mapToInt(x -> x.getWeekMatches().size())
+                        .sum());
 
     }
 
@@ -44,6 +48,6 @@ public class MatchScheduleGeneratorTest {
         FootballClub fc = Mockito.mock(FootballClub.class);
 
         return List.of(fc, fc, fc, fc, fc, fc, fc, fc, fc, fc,
-                fc, fc, fc, fc, fc, fc, fc, fc, fc, fc);
+                fc, fc);
     }
 }
