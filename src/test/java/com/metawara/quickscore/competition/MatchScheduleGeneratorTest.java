@@ -1,7 +1,6 @@
 package com.metawara.quickscore.competition;
 
 import com.metawara.quickscore.model.FootballClub;
-import com.metawara.quickscore.model.match.FCMatch;
 import com.metawara.quickscore.model.match.MatchWeek;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,10 +10,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -35,7 +31,7 @@ public class MatchScheduleGeneratorTest {
     @Test
     public void simulateASeason_shouldProperlyGenerateFixtures() {
         matchScheduleGenerator = new MatchScheduleGenerator();
-        List<MatchWeek>  matchWeekHistory = matchScheduleGenerator.generateMatchWeeks(clubs);
+        List<MatchWeek> matchWeekHistory = matchScheduleGenerator.generateMatchWeeks(clubs);
 
         assertEquals((long) clubs.size() * clubs.size() - clubs.size(),
                 matchWeekHistory.stream()
