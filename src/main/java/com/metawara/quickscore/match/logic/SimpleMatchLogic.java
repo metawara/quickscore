@@ -2,6 +2,7 @@ package com.metawara.quickscore.match.logic;
 
 import com.metawara.quickscore.model.match.FCMatch;
 import com.metawara.quickscore.model.match.FCMatchStatistics;
+import com.metawara.quickscore.utils.RandomSingleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +17,7 @@ import java.util.Random;
 public class SimpleMatchLogic implements MatchLogic {
 
     private static final Logger logger = LoggerFactory.getLogger(SimpleMatchLogic.class);
-    Random rand = new Random();
+    Random rand = RandomSingleton.getInstance().getRnd();
 
     @Override
     public FCMatch simulateMatch(FCMatch match) {
