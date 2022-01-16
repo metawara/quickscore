@@ -8,6 +8,11 @@ public class Footballer {
     private final String lastName;
     private final String nickname;
 
+    private int goals = 0;
+    private int assists = 0;
+    private int yellowCards = 0;
+    private int redCards = 0;
+
     public Footballer(int shirtNumber, String firstName, String lastName, String nickname) {
         this.shirtNumber = shirtNumber;
         this.firstName = firstName;
@@ -29,6 +34,38 @@ public class Footballer {
 
     public String getLastName() {
         return lastName;
+    }
+
+    public int getGoals() {
+        return goals;
+    }
+
+    public void setGoals(int goals) {
+        this.goals = goals;
+    }
+
+    public int getAssists() {
+        return assists;
+    }
+
+    public void setAssists(int assists) {
+        this.assists = assists;
+    }
+
+    public int getYellowCards() {
+        return yellowCards;
+    }
+
+    public void setYellowCards(int yellowCards) {
+        this.yellowCards = yellowCards;
+    }
+
+    public int getRedCards() {
+        return redCards;
+    }
+
+    public void setRedCards(int redCards) {
+        this.redCards = redCards;
     }
 
     public Optional<String> getNickname() {
