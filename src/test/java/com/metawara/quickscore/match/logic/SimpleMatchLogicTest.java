@@ -1,4 +1,4 @@
-package com.metawara.quickscore.match;
+package com.metawara.quickscore.match.logic;
 
 import com.metawara.quickscore.match.logic.MatchLogic;
 import com.metawara.quickscore.match.logic.SimpleMatchLogic;
@@ -35,7 +35,7 @@ public class SimpleMatchLogicTest {
     @Mock
     private FootballClub footballClub2;
 
-    private MatchLogic matchLogic = new SimpleMatchLogic();
+    private final MatchLogic matchLogic = new SimpleMatchLogic();
 
     @Before
     public void initialize(){

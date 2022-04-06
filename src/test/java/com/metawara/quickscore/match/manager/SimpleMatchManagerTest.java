@@ -1,4 +1,4 @@
-package com.metawara.quickscore.match;
+package com.metawara.quickscore.match.manager;
 
 import com.metawara.quickscore.match.logic.SimpleMatchLogic;
 import com.metawara.quickscore.match.manager.SimpleMatchManager;
