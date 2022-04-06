@@ -3,6 +3,7 @@ package com.metawara.quickscore.competition;
 import com.metawara.quickscore.model.FootballClub;
 import com.metawara.quickscore.model.match.FCMatch;
 import com.metawara.quickscore.model.match.MatchWeek;
+import com.metawara.quickscore.utils.RandomSingleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +17,7 @@ public class MatchScheduleGenerator {
 
     Map<Integer, List<Integer>> matchups;
 
-    Random rand = new Random();
+    Random rand = RandomSingleton.getInstance().getRnd();
 
     List<MatchWeek> generateMatchWeeks(List<FootballClub> leagueClubs) {
         List<MatchWeek> matchWeekHistory = new ArrayList<>();

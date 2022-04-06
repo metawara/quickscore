@@ -18,4 +18,8 @@ public class MatchRoster {
     public Set<Footballer> getBench() {
         return bench;
     }
+
+    public Footballer getPotentialGoalscorer(){
+        return firstTeam.stream().findAny().orElse(new Footballer(0, "", "", ""));
+    }
 }

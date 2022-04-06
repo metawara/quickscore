@@ -3,8 +3,8 @@ package com.metawara.quickscore.model.match;
 import com.metawara.quickscore.model.FootballClub;
 
 public class FCMatch {
-    private FCMatchStatistics homeSideStatistics;
-    private FCMatchStatistics awaySideStatistics;
+    private final FCMatchStatistics homeSideStatistics;
+    private final FCMatchStatistics awaySideStatistics;
 
     public FCMatch(FootballClub homeSide, FootballClub awaySide){
         this.homeSideStatistics = new FCMatchStatistics(homeSide, 0);
@@ -49,11 +49,11 @@ public class FCMatch {
     }
 
     public double getHomeSideWinningChance() {
-        return homeSideStatistics.getFootballClub().getChanceOfWinning();
+        return homeSideStatistics.getFootballClub().getBaseWinningChance();
     }
 
     public double getAwaySideWinningChance() {
-        return awaySideStatistics.getFootballClub().getChanceOfWinning();
+        return awaySideStatistics.getFootballClub().getBaseWinningChance();
     }
 
 }
