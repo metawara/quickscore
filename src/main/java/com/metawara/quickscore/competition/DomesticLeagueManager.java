@@ -32,7 +32,7 @@ public class DomesticLeagueManager {
         this.matchManager = matchManager;
         participatingClubs = importer.importClubs();
         standingsManager = new StandingsManager(participatingClubs);
-        matchWeekHistory = new MatchScheduleGenerator().generateMatchWeeks(participatingClubs);
+        matchWeekHistory = MatchScheduleGenerator.generateMatchWeeksForDoubleRoundRobinTrmt(participatingClubs);
     }
 
     public void simulateWeek() {

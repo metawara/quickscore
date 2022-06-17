@@ -4,67 +4,43 @@ import com.metawara.quickscore.model.FootballClub;
 import com.metawara.quickscore.model.MonoPair;
 import com.metawara.quickscore.model.match.FCMatch;
 import com.metawara.quickscore.model.match.MatchWeek;
-import com.metawara.quickscore.utils.RandomSingleton;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
 
+/**
+ *  A schedule generator for various types of competitions.
+ */
 public class MatchScheduleGenerator {
 
-    private static final Logger logger = LoggerFactory.getLogger(MatchScheduleGenerator.class);
+    private MatchScheduleGenerator(){}
 
-    Map<Integer, List<Integer>> matchups;
+    public static List<MatchWeek> generateMatchWeeksForDoubleRoundRobinTrmt(List<FootballClub> leagueClubs) {
+        List<List<MonoPair<Integer>>> roundRobinMatchups = TournamentSystemGenerator.generateRoundRobinMatchups(leagueClubs.size());
 
-    Random rand = RandomSingleton.getInstance().getRnd();
+        List<List<MonoPair<Integer>>> invertedRoundRobinMatchups = new ArrayList<>();
+        for(List<MonoPair<Integer>> matchWeekMatchup : roundRobinMatchups){
+            List<MonoPair<Integer>> invertedMatchWeekMatchup = new ArrayList<>();
 
-    List<MatchWeek> generateMatchWeeks(List<FootballClub> leagueClubs) {
-        List<MatchWeek> matchWeekHistory = new ArrayList<>();
-        List<List<MonoPair<Integer>>> doubleRoundRobinMatchups = generateDoubleRoundRobinMatchups(leagueClubs.size());
+            matchWeekMatchup.forEach(pair -> invertedMatchWeekMatchup.add(pair.invert()));
+            invertedRoundRobinMatchups.add(invertedMatchWeekMatchup);
+        }
+
+        roundRobinMatchups.addAll(invertedRoundRobinMatchups);
 
         int internalWeekCounter = 1;
         List<FCMatch> matchesForCurrentWeek = new ArrayList<>();
 
-        for(List<MonoPair<Integer>> listOfPairs : doubleRoundRobinMatchups){
+        List<MatchWeek> matchWeekHistory = new ArrayList<>();
+        for(List<MonoPair<Integer>> listOfPairs : roundRobinMatchups){
             for(MonoPair<Integer> pair : listOfPairs){
                 matchesForCurrentWeek.add(new FCMatch(leagueClubs.get(pair.getA()), leagueClubs.get(pair.getB())));
             }
-            matchWeekHistory.add(new MatchWeek(internalWeekCounter, new ArrayList<>(matchesForCurrentWeek)));
+            matchWeekHistory.add(new MatchWeek(internalWeekCounter++, new ArrayList<>(matchesForCurrentWeek)));
             matchesForCurrentWeek = new ArrayList<>();
         }
 
         return matchWeekHistory;
-    }
-
-    private List<List<MonoPair<Integer>>> generateDoubleRoundRobinMatchups(int leagueSize) {
-        int totalRounds = (leagueSize - 1) * 2;
-
-        List<List<MonoPair<Integer>>> listOfMatchupsforMatchweeks = new ArrayList<>();
-
-        for (int round = 0; round < totalRounds; round++) {
-            List<MonoPair<Integer>> buffer = new ArrayList<>();
-            for (int match = 0; match < leagueSize / 2; match++) {
-                int home = (round + match) % (leagueSize - 1);
-                int away = (leagueSize - 1 - match + round) % (leagueSize - 1);
-
-                if (match == 0) {
-                    away = leagueSize - 1;
-                }
-
-                if(totalRounds / 2 > totalRounds) {
-                    buffer.add(MonoPair.of(away, home));
-                }
-                else {
-                    buffer.add(MonoPair.of(home, away));
-                }
-            }
-            listOfMatchupsforMatchweeks.add(buffer);
-        }
-
-        return listOfMatchupsforMatchweeks;
     }
 
 }

@@ -1,5 +1,9 @@
 package com.metawara.quickscore.model;
 
+/**
+ * An implementation of a single-type pair.
+ * @param <T> preferred pair type
+ */
 public class MonoPair<T> {
 
     private final T a;
@@ -14,7 +18,7 @@ public class MonoPair<T> {
         return new MonoPair<>(a, b);
     }
 
-    public static <T> MonoPair<T> invert(T a, T b){
+    public MonoPair<T> invert() {
         return new MonoPair<>(b, a);
     }
 
