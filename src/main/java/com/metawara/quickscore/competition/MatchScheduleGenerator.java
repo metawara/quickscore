@@ -1,15 +1,17 @@
 package com.metawara.quickscore.competition;
 
 import com.metawara.quickscore.model.FootballClub;
+import com.metawara.quickscore.model.MonoPair;
 import com.metawara.quickscore.model.match.FCMatch;
 import com.metawara.quickscore.model.match.MatchWeek;
 import com.metawara.quickscore.utils.RandomSingleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 public class MatchScheduleGenerator {
 
@@ -21,97 +23,48 @@ public class MatchScheduleGenerator {
 
     List<MatchWeek> generateMatchWeeks(List<FootballClub> leagueClubs) {
         List<MatchWeek> matchWeekHistory = new ArrayList<>();
-        initializeMatchups(leagueClubs, matchWeekHistory);
+        List<List<MonoPair<Integer>>> doubleRoundRobinMatchups = generateDoubleRoundRobinMatchups(leagueClubs.size());
 
         int internalWeekCounter = 1;
         List<FCMatch> matchesForCurrentWeek = new ArrayList<>();
 
-        while (internalWeekCounter <= leagueClubs.size() * 2 - 2) {
-            int[][] weeklyMatchupIds = generateMatchupsForAWeek(leagueClubs);
-
-            if (weeklyMatchupIds.length == 0) {
-                logger.debug("Encountered a match-making deadlock. Reverting to the beginning...");
-                initializeMatchups(leagueClubs, matchWeekHistory);
-                internalWeekCounter = 1;
-            } else {
-                for (int[] matchup : weeklyMatchupIds) {
-                    matchups.get(matchup[0]).remove(Integer.valueOf(matchup[1]));
-                    matchesForCurrentWeek.add(new FCMatch(leagueClubs.get(matchup[0] - 1), leagueClubs.get(matchup[1] - 1)));
-                }
-                matchWeekHistory.add(new MatchWeek(internalWeekCounter, new ArrayList<>(matchesForCurrentWeek)));
-                matchesForCurrentWeek.clear();
-                internalWeekCounter++;
+        for(List<MonoPair<Integer>> listOfPairs : doubleRoundRobinMatchups){
+            for(MonoPair<Integer> pair : listOfPairs){
+                matchesForCurrentWeek.add(new FCMatch(leagueClubs.get(pair.getA()), leagueClubs.get(pair.getB())));
             }
+            matchWeekHistory.add(new MatchWeek(internalWeekCounter, new ArrayList<>(matchesForCurrentWeek)));
+            matchesForCurrentWeek = new ArrayList<>();
         }
+
         return matchWeekHistory;
     }
 
-    /**
-     * This algorithm NEEDS a change in the future.
-     */
-    private int[][] generateMatchupsForAWeek(List<FootballClub> leagueClubs) {
-        List<Integer> availableClubsToPickFrom = IntStream.rangeClosed(1, leagueClubs.size()).boxed().collect(Collectors.toList());
-        int[][] pairs = new int[leagueClubs.size() / 2][2];
-        int pairsFound = 0;
+    private List<List<MonoPair<Integer>>> generateDoubleRoundRobinMatchups(int leagueSize) {
+        int totalRounds = (leagueSize - 1) * 2;
 
-        while (!availableClubsToPickFrom.isEmpty()) {
-            int homeSideId = pickRandomClub(availableClubsToPickFrom);
-            availableClubsToPickFrom.remove(Integer.valueOf(homeSideId));
+        List<List<MonoPair<Integer>>> listOfMatchupsforMatchweeks = new ArrayList<>();
 
-            List<Integer> homeSideAvailableMatchups = matchups.get(homeSideId);
+        for (int round = 0; round < totalRounds; round++) {
+            List<MonoPair<Integer>> buffer = new ArrayList<>();
+            for (int match = 0; match < leagueSize / 2; match++) {
+                int home = (round + match) % (leagueSize - 1);
+                int away = (leagueSize - 1 - match + round) % (leagueSize - 1);
 
-            int retries = 0;
-            while (homeSideAvailableMatchups.isEmpty()) {
-                homeSideId = swapHomeSideId(availableClubsToPickFrom, homeSideId);
+                if (match == 0) {
+                    away = leagueSize - 1;
+                }
 
-                homeSideAvailableMatchups = matchups.get(homeSideId);
-                retries++;
-                if (retries > 10) {
-                    return new int[0][0];
+                if(totalRounds / 2 > totalRounds) {
+                    buffer.add(MonoPair.of(away, home));
+                }
+                else {
+                    buffer.add(MonoPair.of(home, away));
                 }
             }
-
-            int awaySideId = pickRandomClub(homeSideAvailableMatchups);
-
-            if (!availableClubsToPickFrom.remove(Integer.valueOf(awaySideId))) {
-                pairs = new int[leagueClubs.size() / 2][2];
-                pairsFound = 0;
-                availableClubsToPickFrom = IntStream.rangeClosed(1, leagueClubs.size()).boxed().collect(Collectors.toList());
-            } else {
-                savePair(pairs, pairsFound, homeSideId, awaySideId);
-                pairsFound++;
-            }
+            listOfMatchupsforMatchweeks.add(buffer);
         }
 
-        return pairs;
-    }
-
-    private void savePair(int[][] pairs, int pairsFound, int homeSideId, int awaySideId) {
-        pairs[pairsFound][0] = homeSideId;
-        pairs[pairsFound][1] = awaySideId;
-    }
-
-    private int swapHomeSideId(List<Integer> availableClubsToPickFrom, int homeSideId) {
-        int buf = homeSideId;
-        homeSideId = pickRandomClub(availableClubsToPickFrom);
-        availableClubsToPickFrom.remove(Integer.valueOf(homeSideId));
-        availableClubsToPickFrom.add(buf);
-        return homeSideId;
-    }
-
-    private Integer pickRandomClub(List<Integer> availableClubsToPickFrom) {
-        return availableClubsToPickFrom.get(rand.nextInt(availableClubsToPickFrom.size()));
-    }
-
-    private void initializeMatchups(List<FootballClub> leagueClubs, List<MatchWeek> matchWeekHistory) {
-        matchups = new HashMap<>();
-        matchWeekHistory.clear();
-        for (int a = 1; a < leagueClubs.size() + 1; a++) {
-            List<Integer> specificMatchups = IntStream.rangeClosed(1, leagueClubs.size()).boxed().collect(Collectors.toList());
-            specificMatchups.remove(a - 1);
-            matchups.put(a, specificMatchups);
-        }
-        logger.debug("Matchups initialized for league size: {}.", leagueClubs.size());
+        return listOfMatchupsforMatchweeks;
     }
 
 }

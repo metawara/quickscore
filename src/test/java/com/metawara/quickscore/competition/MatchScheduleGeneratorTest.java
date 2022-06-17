@@ -44,6 +44,6 @@ public class MatchScheduleGeneratorTest {
         FootballClub fc = Mockito.mock(FootballClub.class);
 
         return List.of(fc, fc, fc, fc, fc, fc, fc, fc, fc, fc,
-                fc, fc);
+                fc, fc, fc, fc, fc, fc, fc, fc, fc, fc);
     }
 }
