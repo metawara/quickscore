@@ -13,25 +13,32 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Imports football clubs from a JSON file.
+ * A path to a JSON file is required while creating an instance.
+ */
 public class JSONFootballClubImporter implements FootballClubImporter {
 
     private static final Logger logger = LoggerFactory.getLogger(JSONFootballClubImporter.class);
 
-    @Override
-    public List<FootballClub> importClubs() {
-        return importClubs("sampleroster.json");
+    private String path;
+
+    public JSONFootballClubImporter(String path) {
+        this.path = path;
     }
 
-    public List<FootballClub> importClubs(String jsonStr){
-        logger.debug("Attempting to import clubs from a file with a path {}", jsonStr);
+    @Override
+    public List<FootballClub> importClubs() {
+        return importClubs(path);
+    }
+
+    private List<FootballClub> importClubs(String path) {
+        logger.debug("Attempting to import clubs from a file with a path {}", path);
         Gson gson = new GsonBuilder().create();
-        BufferedReader bufferedReader;
         List<FootballClub> clubs = new ArrayList<>();
 
-        try {
-            bufferedReader = new BufferedReader(new FileReader(new ClassPathResource(jsonStr).getFile()));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(new ClassPathResource(path).getFile()))) {
             clubs = convertArrayIntoList(gson.fromJson(bufferedReader, FootballClub[].class));
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -46,5 +53,9 @@ public class JSONFootballClubImporter implements FootballClubImporter {
         List<FootballClub> clubs = List.of(importedClubs);
         logger.debug("Imported clubs: {}", clubs);
         return clubs;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }

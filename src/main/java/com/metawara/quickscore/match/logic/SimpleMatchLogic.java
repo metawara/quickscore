@@ -28,7 +28,8 @@ public class SimpleMatchLogic implements MatchLogic {
         double homeSideWinningChance = match.getHomeSideWinningChance();
         double awaySideWinningChance = match.getAwaySideWinningChance();
 
-        logger.debug("{} // {}", homeSideWinningChance, awaySideWinningChance);
+        logger.debug("Winning chance for the home side: {}", homeSideWinningChance);
+        logger.debug("Winning chance for the away side: {}", awaySideWinningChance);
 
         if (homeSideWinningChance > awaySideWinningChance) {
             homeSideGoalsScored = rand.nextInt(4) + 1;
@@ -46,7 +47,8 @@ public class SimpleMatchLogic implements MatchLogic {
         increaseGoals(match.getHomeSideMatchStatistics(), homeSideGoalsScored);
         increaseGoals(match.getAwaySideMatchStatistics(), awaySideGoalsScored);
 
-        logger.debug("{} // {}", homeSideGoalsScored, awaySideGoalsScored);
+        logger.debug("Home side goals scored: {}", homeSideGoalsScored);
+        logger.debug("Away side goals scored: {}", awaySideGoalsScored);
 
         return match;
     }

@@ -18,8 +18,6 @@ public class VarianceMatchLogic implements MatchLogic {
 
     FCMatchEventProcessor eventProcessor;
 
-    FinalVarianceCalculator fvc;
-
     @Override
     public FCMatch simulateMatch(FCMatch match) {
 
@@ -39,7 +37,8 @@ public class VarianceMatchLogic implements MatchLogic {
                 awaySide.getPositiveWCVariance(),
                 awaySide.getNegativeWCVariance());
 
-        logger.debug("{} // {}", homeSideWinningChance, awaySideWinningChance);
+        logger.debug("Winning chance for the home side: {}", homeSideWinningChance);
+        logger.debug("Winning chance for the away side: {}", awaySideWinningChance);
 
         if (homeSideWinningChance > awaySideWinningChance) {
             homeSideGoalsScored = rand.nextInt(5) + 1;

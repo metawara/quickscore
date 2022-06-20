@@ -49,7 +49,8 @@ public class DomesticLeagueManagerTest {
 
     @Test
     public void simulateASeason_shouldProperlyIncreaseWeekCounter() {
-        domesticLeagueManager = new DomesticLeagueManager(matchManager, importer);
+        domesticLeagueManager = new DomesticLeagueManager(matchManager);
+        domesticLeagueManager.initialize(importer);
         domesticLeagueManager.simulateWeek();
 
         assertEquals(1, domesticLeagueManager.getWeekCounter());

@@ -5,6 +5,9 @@ import com.metawara.quickscore.model.MonoPair;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Provides matchups for defined tournament types.
+ */
 public class TournamentSystemGenerator {
 
     private TournamentSystemGenerator(){}

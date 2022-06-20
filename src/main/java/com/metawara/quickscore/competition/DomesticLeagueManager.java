@@ -9,8 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Provides control of all actions related to league managing (automatic generation of league schedule
@@ -19,20 +19,29 @@ import java.util.Optional;
 public class DomesticLeagueManager {
 
     private static final Logger logger = LoggerFactory.getLogger(DomesticLeagueManager.class);
-
-    List<FootballClub> participatingClubs;
-    List<MatchWeek> matchWeekHistory;
-
+    private final MatchManager matchManager;
+    List<FootballClub> participatingClubs = Collections.emptyList();
+    List<MatchWeek> matchWeekHistory = Collections.emptyList();
+    StandingsManager standingsManager;
     private int weekCounter = 0;
 
-    private final MatchManager matchManager;
-    StandingsManager standingsManager;
-
-    public DomesticLeagueManager(MatchManager matchManager, FootballClubImporter importer) {
+    public DomesticLeagueManager(MatchManager matchManager) {
         this.matchManager = matchManager;
+    }
+
+    public void initialize(FootballClubImporter importer) {
+        importClubs(importer);
+        if (participatingClubs.isEmpty()) {
+            logger.warn("Participating clubs list is empty after import attempt. Will not attempt to generate match weeks nor create a Standings Manager.");
+        } else {
+            standingsManager = new StandingsManager(participatingClubs);
+            matchWeekHistory = MatchScheduleGenerator.generateMatchWeeksForDoubleRoundRobinTrmt(participatingClubs);
+        }
+    }
+
+    private void importClubs(FootballClubImporter importer) {
+        logger.debug("Attempting to import clubs");
         participatingClubs = importer.importClubs();
-        standingsManager = new StandingsManager(participatingClubs);
-        matchWeekHistory = MatchScheduleGenerator.generateMatchWeeksForDoubleRoundRobinTrmt(participatingClubs);
     }
 
     public void simulateWeek() {
@@ -41,11 +50,15 @@ public class DomesticLeagueManager {
             return;
         }
         weekCounter++;
-        Optional<MatchWeek> currentWeek = matchWeekHistory.stream().filter(x -> x.getWeekNumber() == weekCounter).findAny();
-        MatchWeek cw = currentWeek.orElse(new MatchWeek(0, new ArrayList<>()));
+
+        MatchWeek cw = matchWeekHistory.stream()
+                .filter(x -> x.getWeekNumber() == weekCounter)
+                .findAny()
+                .orElse(new MatchWeek(0, new ArrayList<>()));
         for (FCMatch match : cw.getWeekMatches()) {
             matchManager.manageMatch(match);
-            standingsManager.updateFromMatch(match);
+            logger.debug("Match finished. Updating standings...");
+            standingsManager.awardPoints(match);
         }
 
         logger.debug("Match week {} finished.", weekCounter);

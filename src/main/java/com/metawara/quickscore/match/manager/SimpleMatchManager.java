@@ -8,7 +8,6 @@ import com.metawara.quickscore.model.match.FCMatch;
 /**
  * A simple match manager that runs validations, simulates and prints adequate information.
  */
-
 public class SimpleMatchManager implements MatchManager {
 
     private final SimpleMatchLogic matchLogic;
